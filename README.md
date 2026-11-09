@@ -36,7 +36,7 @@ pip install -r python/requirements.txt
 # 3. 预测建模（数据经 data/daily_gmv.csv，由 dws_order_day 导出）
 python python/predict_gmv.py
 
-# 4. AI 任务：复制 .env.example 为 .env 并填入 DEEPSEEK_API_KEY
+# 4. AI 任务：复制 .env.example 为 .env 并填入 ZHIPU_API_KEY（智谱）
 python python/llm_client.py          # 最小化连通验证
 python python/schema_extract.py      # Schema 抽取
 python python/nl2sql.py "销量最高的前5个品类"
@@ -48,7 +48,7 @@ python python/ai_insight.py          # 异常归因 + 自动摘要
 - ADS 全期 KPI：GMV 1415.12 万 / 订单 5642 / 客单价 2508.19 / 活跃用户 997 / 复购率 98.09%
 - 用户分层：高价值 201 / 潜力 379 / 一般 309 / 低价值 108
 - 预测建模：线性回归 MAPE 31.7% ≈ 均值基线 31.5% ≈ 序列 CV 31.2%，经基线对比证实数据无趋势/周期信号，模型实为均值外推——边界分析详见报告
-- NL2SQL：4 用例实测 4/4 通过（含负例拦截），详细记录见 `python/nl2sql_tests.md`
+- NL2SQL：Schema 自动注入 Prompt + SELECT-only 拦截 + few-shot 示例 + 报错回传自修复（repair_sql），4 用例实测 4/4 通过（含负例拦截），详细记录见 `python/nl2sql_tests.md`
 
 ## 密钥安全规范
 

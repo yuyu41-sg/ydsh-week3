@@ -11,17 +11,17 @@ from openai import OpenAI
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv(os.path.join(BASE, ".env"))
 
-api_key = os.environ.get("DEEPSEEK_API_KEY")
-if not api_key or api_key.startswith("sk-xxx"):
-    raise SystemExit("未配置 API Key：请复制 .env.example 为 .env 并填入真实 DEEPSEEK_API_KEY")
+api_key = os.environ.get("ZHIPU_API_KEY")
+if not api_key or "xxxx" in api_key:
+    raise SystemExit("未配置 API Key：请复制 .env.example 为 .env 并填入真实 ZHIPU_API_KEY")
 
 client = OpenAI(
     api_key=api_key,
-    base_url=os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com"),
+    base_url=os.environ.get("ZHIPU_BASE_URL", "https://open.bigmodel.cn/api/paas/v4/"),
 )
 
 resp = client.chat.completions.create(
-    model=os.environ.get("DEEPSEEK_MODEL", "deepseek-chat"),
+    model=os.environ.get("ZHIPU_MODEL", "glm-4-flash"),
     messages=[
         {"role": "system", "content": "你是一个简洁的助手。"},
         {"role": "user", "content": "用一句话说明什么是 NL2SQL。"},
