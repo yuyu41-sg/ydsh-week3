@@ -3,10 +3,10 @@
 子任务5：AI 智能洞察与报告生成
 流程：
   1) 从 Hive 拉取核心 KPI + 月度 GMV + 品类占比（beeline → csv）
-  2) 调用大模型做异常归因（找 GMV 环比降幅最大的月份并分析原因）
+  2) 调用智谱 GLM 大模型做异常归因（找 GMV 环比降幅最大的月份并分析原因）
   3) 生成自动化经营分析摘要
   4) 输出《AI 经营分析摘要》与人工验证要点
-前置：.env 已配置 DEEPSEEK_API_KEY
+前置：.env 已配置 ZHIPU_API_KEY
 用法：python ai_insight.py
 """
 import json
@@ -20,12 +20,12 @@ from openai import OpenAI
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv(os.path.join(BASE, ".env"))
 
-api_key = os.environ.get("DEEPSEEK_API_KEY")
-if not api_key or api_key.startswith("sk-xxx"):
-    raise SystemExit("未配置 API Key：请复制 .env.example 为 .env 并填入真实 DEEPSEEK_API_KEY")
+api_key = os.environ.get("ZHIPU_API_KEY")
+if not api_key or "xxxx" in api_key:
+    raise SystemExit("未配置 API Key：请复制 .env.example 为 .env 并填入真实 ZHIPU_API_KEY")
 
 client = OpenAI(api_key=api_key,
-                base_url=os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com"))
+                base_url=os.environ.get("ZHIPU_BASE_URL", "https://open.bigmodel.cn/api/paas/v4/"))
 
 def hql_query(sql):
     cmd = ["docker", "exec", "ydsh-hiveserver2", "bash", "-c",
@@ -59,7 +59,7 @@ attribution_prompt = f"""你是零售行业数据分析师。以下是某新零�
 用简洁的编号列表回答。"""
 
 resp1 = client.chat.completions.create(
-    model=os.environ.get("DEEPSEEK_MODEL", "deepseek-chat"),
+    model=os.environ.get("ZHIPU_MODEL", "glm-4-flash"),
     messages=[{"role": "user", "content": attribution_prompt}], temperature=0.3)
 attribution = resp1.choices[0].message.content
 
@@ -70,7 +70,7 @@ summary_prompt = f"""基于以下 2024 年真实经营数据，写一份 300 字
 {facts}"""
 
 resp2 = client.chat.completions.create(
-    model=os.environ.get("DEEPSEEK_MODEL", "deepseek-chat"),
+    model=os.environ.get("ZHIPU_MODEL", "glm-4-flash"),
     messages=[{"role": "user", "content": summary_prompt}], temperature=0.5)
 summary = resp2.choices[0].message.content
 
@@ -78,7 +78,7 @@ summary = resp2.choices[0].message.content
 report = f"""# AI 经营分析摘要（自动生成）
 
 > 生成时间：{datetime.now().strftime('%Y-%m-%d %H:%M')}
-> 模型：DeepSeek（deepseek-chat）｜ 事实数据来源：ydsh_ads / ydsh_dws 层 Hive 实查
+> 模型：智谱 GLM（glm-4-flash）｜ 事实数据来源：ydsh_ads / ydsh_dws 层 Hive 实查
 > ⚠️ AI 生成内容，业务结论需人工验证后采用（见文末验证要点）
 
 ## 一、异常归因分析

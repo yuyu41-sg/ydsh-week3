@@ -36,7 +36,7 @@ pip install -r python/requirements.txt
 # 3. 预测建模（数据经 data/daily_gmv.csv，由 dws_order_day 导出）
 python python/predict_gmv.py
 
-# 4. AI 任务：复制 .env.example 为 .env 并填入 DEEPSEEK_API_KEY
+# 4. AI 任务：复制 .env.example 为 .env 并填入 ZHIPU_API_KEY（智谱）
 python python/llm_client.py          # 最小化连通验证
 python python/schema_extract.py      # Schema 抽取
 python python/nl2sql.py "销量最高的前5个品类"
