@@ -48,7 +48,7 @@ python python/ai_insight.py          # 异常归因 + 自动摘要
 - ADS 全期 KPI：GMV 1415.12 万 / 订单 5642 / 客单价 2508.19 / 活跃用户 997 / 复购率 98.09%
 - 用户分层：高价值 201 / 潜力 379 / 一般 309 / 低价值 108
 - 预测建模：线性回归 MAPE 31.7% ≈ 均值基线 31.5% ≈ 序列 CV 31.2%，经基线对比证实数据无趋势/周期信号，模型实为均值外推——边界分析详见报告
-- NL2SQL：Schema 自动注入 Prompt + SELECT-only 拦截 + few-shot 示例，支持自然语言问答闭环
+- NL2SQL：Schema 自动注入 Prompt + SELECT-only 拦截 + few-shot 示例 + 报错回传自修复（repair_sql），4 用例实测全部通过
 
 ## 密钥安全规范
 
